@@ -18,6 +18,7 @@ env:
   ECR_REPOSITORY: togglemaster/evaluation-service
 
 jobs:
+  # ── 1. Build & Unit Test ──────────────────────────────────────────────────
   build-test:
     name: Build & Test
     runs-on: ubuntu-latest
@@ -40,6 +41,7 @@ jobs:
         working-directory: services/evaluation-service
         run: go test ./... -v -count=1
 
+  # ── 2. Lint ───────────────────────────────────────────────────────────────
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -51,12 +53,17 @@ jobs:
         with:
           go-version: '1.21'
 
+      - name: Tidy modules
+        working-directory: services/evaluation-service
+        run: go mod tidy
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
           working-directory: services/evaluation-service
 
+  # ── 3. Security Scan (SAST + SCA) ────────────────────────────────────────
   security:
     name: Security Scan
     runs-on: ubuntu-latest
@@ -67,6 +74,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
+
+      - name: Tidy modules
+        working-directory: services/evaluation-service
+        run: go mod tidy
 
       - name: Trivy SCA (filesystem)
         uses: aquasecurity/trivy-action@master
@@ -82,6 +93,7 @@ jobs:
         with:
           args: '-severity high -confidence high ./services/evaluation-service/...'
 
+  # ── 4. Docker Build, Scan & Push ─────────────────────────────────────────
   docker-push:
     name: Docker Build & Push
     runs-on: ubuntu-latest

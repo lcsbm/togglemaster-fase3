@@ -53,6 +53,10 @@ jobs:
         with:
           go-version: '1.21'
 
+      - name: Tidy modules
+        working-directory: services/auth-service
+        run: go mod tidy
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
@@ -70,6 +74,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
+
+      - name: Tidy modules
+        working-directory: services/auth-service
+        run: go mod tidy
 
       # SCA — Trivy escaneia dependências (go.sum) em busca de CVEs
       - name: Trivy SCA (filesystem)
