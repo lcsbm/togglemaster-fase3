@@ -57,11 +57,12 @@ jobs:
         working-directory: services/auth-service
         run: go mod tidy
 
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: services/auth-service
+        working-directory: services/auth-service
+        run: golangci-lint run ./... --timeout=5m
 
   # ── 3. Security Scan (SAST + SCA) ────────────────────────────────────────
   security:
