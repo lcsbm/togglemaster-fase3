@@ -27,7 +27,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-          cache-dependency-path: services/evaluation-service/go.sum
+
+      - name: Tidy modules
+        working-directory: services/evaluation-service
+        run: go mod tidy
 
       - name: Build
         working-directory: services/evaluation-service
@@ -47,7 +50,6 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-          cache-dependency-path: services/evaluation-service/go.sum
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -65,7 +67,6 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-          cache-dependency-path: services/evaluation-service/go.sum
 
       - name: Trivy SCA (filesystem)
         uses: aquasecurity/trivy-action@master

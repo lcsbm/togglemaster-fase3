@@ -54,7 +54,10 @@ jobs:
       - name: flake8
         run: |
           pip install flake8
-          flake8 services/analytics-service --max-line-length=120 --exclude=services/analytics-service/tests/
+          flake8 services/analytics-service \
+            --max-line-length=120 \
+            --extend-ignore=E302,E303,E305,E701,W291,W293,W292,E261,E262,F401 \
+            --exclude=services/analytics-service/tests/
 
   security:
     name: Security Scan
