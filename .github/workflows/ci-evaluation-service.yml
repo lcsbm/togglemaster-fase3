@@ -1,0 +1,133 @@
+name: CI — evaluation-service
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/evaluation-service/**'
+      - '.github/workflows/ci-evaluation-service.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'services/evaluation-service/**'
+      - '.github/workflows/ci-evaluation-service.yml'
+
+env:
+  SERVICE: evaluation-service
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: togglemaster/evaluation-service
+
+jobs:
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache-dependency-path: services/evaluation-service/go.sum
+
+      - name: Build
+        working-directory: services/evaluation-service
+        run: go build ./...
+
+      - name: Test
+        working-directory: services/evaluation-service
+        run: go test ./... -v -count=1
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache-dependency-path: services/evaluation-service/go.sum
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: services/evaluation-service
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache-dependency-path: services/evaluation-service/go.sum
+
+      - name: Trivy SCA (filesystem)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: 'services/evaluation-service'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          format: 'table'
+
+      - name: gosec SAST
+        uses: securego/gosec@master
+        with:
+          args: '-severity high -confidence high ./services/evaluation-service/...'
+
+  docker-push:
+    name: Docker Build & Push
+    runs-on: ubuntu-latest
+    needs: [lint, security]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:sha-$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        working-directory: services/evaluation-service
+        run: docker build -t $IMAGE_TAG .
+
+      - name: Trivy Container Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE_TAG }}'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          format: 'table'
+
+      - name: Push to ECR
+        run: docker push $IMAGE_TAG
+
+      - name: Update GitOps manifest
+        run: |
+          sed -i "s|image: .*/togglemaster/evaluation-service:.*|image: $IMAGE_TAG|" gitops/evaluation-service/deployment.yaml
+          git config user.email "ci-bot@github.com"
+          git config user.name "CI Bot"
+          git add gitops/evaluation-service/deployment.yaml
+          git diff --cached --quiet || git commit -m "ci: update evaluation-service to sha-$(echo ${{ github.sha }} | cut -c1-7) [skip ci]"
+          git push
