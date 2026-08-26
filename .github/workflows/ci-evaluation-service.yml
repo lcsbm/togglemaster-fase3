@@ -139,10 +139,16 @@ jobs:
 
       - name: Update GitOps manifest
         run: |
-          sed -i "s|image: .*/togglemaster/evaluation-service:.*|image: $IMAGE_TAG|" gitops/evaluation-service/deployment.yaml
           git config user.email "ci-bot@github.com"
           git config user.name "CI Bot"
-          git add gitops/evaluation-service/deployment.yaml
-          git diff --cached --quiet || git commit -m "ci: update evaluation-service to sha-$(echo ${{ github.sha }} | cut -c1-7) [skip ci]"
-          git pull --rebase origin main
-          git push
+          for attempt in 1 2 3 4 5; do
+            git pull origin main
+            sed -i "s|image: .*/togglemaster/evaluation-service:.*|image: $IMAGE_TAG|" gitops/evaluation-service/deployment.yaml
+            git add gitops/evaluation-service/deployment.yaml
+            git diff --cached --quiet && { echo "Already up to date"; exit 0; }
+            git commit -m "ci: update evaluation-service to sha-$(echo ${{ github.sha }} | cut -c1-7) [skip ci]"
+            git push && exit 0
+            echo "Push rejected, resetting and retrying (attempt $attempt)..."
+            git reset --hard HEAD~1
+          done
+          exit 1
