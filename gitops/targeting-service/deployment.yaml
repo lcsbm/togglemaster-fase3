@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: targeting-service
-          image: 603727984890.dkr.ecr.us-east-1.amazonaws.com/togglemaster/targeting-service:initial
+          image: 603727984890.dkr.ecr.us-east-1.amazonaws.com/togglemaster/targeting-service:sha-bd8130b
           ports:
             - containerPort: 8003
           envFrom:
