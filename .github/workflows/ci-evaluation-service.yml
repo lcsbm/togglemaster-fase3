@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.25'
 
       - name: Tidy modules
         working-directory: services/evaluation-service
@@ -51,7 +51,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.25'
 
       - name: Tidy modules
         working-directory: services/evaluation-service
@@ -74,7 +74,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.25'
 
       - name: Tidy modules
         working-directory: services/evaluation-service
