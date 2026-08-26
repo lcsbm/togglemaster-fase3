@@ -1,4 +1,5 @@
 FROM golang:1.21-alpine AS builder
+# build
 WORKDIR /app
 COPY go.mod ./
 COPY *.go ./
