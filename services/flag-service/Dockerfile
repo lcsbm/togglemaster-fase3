@@ -1,5 +1,5 @@
 FROM python:3.11-alpine AS builder
-# alpine: no perl-base CVEs
+# alpine: no perl-base CVEs (retry loop fix)
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
