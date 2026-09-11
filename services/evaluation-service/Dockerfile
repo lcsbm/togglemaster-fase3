@@ -12,3 +12,4 @@ COPY --from=builder /evaluation-service .
 USER app
 EXPOSE 8004
 CMD ["./evaluation-service"]
+

@@ -11,3 +11,4 @@ COPY --from=builder /auth-service .
 USER app
 EXPOSE 8001
 CMD ["./auth-service"]
+
