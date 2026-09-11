@@ -13,3 +13,4 @@ USER app
 EXPOSE 8004
 CMD ["./evaluation-service"]
 
+

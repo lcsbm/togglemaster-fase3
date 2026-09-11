@@ -12,3 +12,4 @@ USER appuser
 EXPOSE 8003
 CMD ["gunicorn", "--bind", "0.0.0.0:8003", "--workers", "2", "app:app"]
 
+
