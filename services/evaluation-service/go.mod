@@ -14,5 +14,5 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.27.6 // indirect
-	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
 )
