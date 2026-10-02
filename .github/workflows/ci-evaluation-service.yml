@@ -85,7 +85,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: 'services/evaluation-service'
-          severity: 'CRITICAL'
+          severity: 'CRITICAL,HIGH'
           exit-code: '1'
           format: 'table'
 
@@ -130,7 +130,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: '${{ env.IMAGE_TAG }}'
-          severity: 'CRITICAL'
+          severity: 'CRITICAL,HIGH'
           exit-code: '1'
           format: 'table'
 

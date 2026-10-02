@@ -45,7 +45,7 @@ resource "aws_secretsmanager_secret" "auth" {
 resource "aws_secretsmanager_secret_version" "auth" {
   secret_id = aws_secretsmanager_secret.auth.id
   secret_string = jsonencode({
-    DATABASE_URL = "postgres://pguser:${random_password.db_password.result}@${aws_db_instance.auth.address}:5432/auth_db?sslmode=require"
+    DATABASE_URL = "postgres://pguser:${urlencode(random_password.db_password.result)}@${aws_db_instance.auth.address}:5432/auth_db?sslmode=require"
     MASTER_KEY   = random_password.master_key.result
   })
 }
@@ -59,7 +59,7 @@ resource "aws_secretsmanager_secret" "flags" {
 resource "aws_secretsmanager_secret_version" "flags" {
   secret_id = aws_secretsmanager_secret.flags.id
   secret_string = jsonencode({
-    DATABASE_URL    = "postgresql://pguser:${random_password.db_password.result}@${aws_db_instance.flags.address}:5432/flags_db?sslmode=require"
+    DATABASE_URL    = "postgresql://pguser:${urlencode(random_password.db_password.result)}@${aws_db_instance.flags.address}:5432/flags_db?sslmode=require"
     SERVICE_API_KEY = random_password.service_api_key.result
   })
 }
@@ -73,7 +73,7 @@ resource "aws_secretsmanager_secret" "targeting" {
 resource "aws_secretsmanager_secret_version" "targeting" {
   secret_id = aws_secretsmanager_secret.targeting.id
   secret_string = jsonencode({
-    DATABASE_URL    = "postgresql://pguser:${random_password.db_password.result}@${aws_db_instance.targeting.address}:5432/targeting_db?sslmode=require"
+    DATABASE_URL    = "postgresql://pguser:${urlencode(random_password.db_password.result)}@${aws_db_instance.targeting.address}:5432/targeting_db?sslmode=require"
     SERVICE_API_KEY = random_password.service_api_key.result
   })
 }
@@ -87,7 +87,7 @@ resource "aws_secretsmanager_secret" "evaluation" {
 resource "aws_secretsmanager_secret_version" "evaluation" {
   secret_id = aws_secretsmanager_secret.evaluation.id
   secret_string = jsonencode({
-    REDIS_URL       = "redis://${aws_elasticache_cluster.redis.cache_nodes[0].address}:6379"
+    REDIS_URL       = "rediss://${aws_elasticache_replication_group.redis.primary_endpoint_address}:6379"
     SERVICE_API_KEY = random_password.service_api_key.result
     AWS_SQS_URL     = aws_sqs_queue.events.url
   })

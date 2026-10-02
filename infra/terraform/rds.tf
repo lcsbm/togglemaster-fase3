@@ -43,6 +43,7 @@ locals {
     skip_final_snapshot     = true
     deletion_protection     = false
     backup_retention_period = 0
+    storage_encrypted       = true
   }
 }
 
@@ -65,6 +66,7 @@ resource "aws_db_instance" "auth" {
   skip_final_snapshot     = local.rds_common.skip_final_snapshot
   deletion_protection     = local.rds_common.deletion_protection
   backup_retention_period = local.rds_common.backup_retention_period
+  storage_encrypted       = local.rds_common.storage_encrypted
 
   tags = merge(local.common_tags, { Service = "auth-service" })
 }
@@ -88,6 +90,7 @@ resource "aws_db_instance" "flags" {
   skip_final_snapshot     = local.rds_common.skip_final_snapshot
   deletion_protection     = local.rds_common.deletion_protection
   backup_retention_period = local.rds_common.backup_retention_period
+  storage_encrypted       = local.rds_common.storage_encrypted
 
   tags = merge(local.common_tags, { Service = "flag-service" })
 }
@@ -111,6 +114,7 @@ resource "aws_db_instance" "targeting" {
   skip_final_snapshot     = local.rds_common.skip_final_snapshot
   deletion_protection     = local.rds_common.deletion_protection
   backup_retention_period = local.rds_common.backup_retention_period
+  storage_encrypted       = local.rds_common.storage_encrypted
 
   tags = merge(local.common_tags, { Service = "targeting-service" })
 }

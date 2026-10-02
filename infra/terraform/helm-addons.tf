@@ -62,16 +62,11 @@ resource "helm_release" "argocd" {
   create_namespace = true
   version          = "6.7.3"
 
-  # --insecure desativa TLS no servidor interno — o Ingress ou LoadBalancer faz o TLS.
-  # type: LoadBalancer expõe o argocd-server diretamente para acesso via browser.
-  set {
-    name  = "server.extraArgs[0]"
-    value = "--insecure"
-  }
-
+  # ClusterIP: painel acessível apenas via port-forward — não exposto à internet.
+  # kubectl port-forward svc/argocd-server -n argocd 8080:443
   set {
     name  = "server.service.type"
-    value = "LoadBalancer"
+    value = "ClusterIP"
   }
 
   depends_on = [module.eks]
