@@ -6,6 +6,9 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 FROM python:3.11-alpine
 WORKDIR /app
+# Remove setuptools da imagem base para evitar CVEs no _vendor/ antigo (79.x)
+RUN rm -rf /usr/local/lib/python3.11/site-packages/setuptools* \
+           /usr/local/lib/python3.11/site-packages/pkg_resources
 COPY --from=builder /install /usr/local
 COPY app.py .
 RUN adduser -D -H -g "" appuser
