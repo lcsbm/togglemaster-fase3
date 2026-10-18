@@ -9,8 +9,8 @@ module "eks" {
   subnet_ids = module.vpc.private_subnets
 
   # Endpoint público restrito — acesso via kubectl de IPs conhecidos
-  cluster_endpoint_public_access       = true
-  cluster_endpoint_public_access_cidrs = var.eks_public_access_cidrs
+  cluster_endpoint_public_access           = true
+  cluster_endpoint_public_access_cidrs     = var.eks_public_access_cidrs
   enable_cluster_creator_admin_permissions = true
 
   eks_managed_node_groups = {
