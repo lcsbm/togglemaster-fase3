@@ -10,9 +10,9 @@ Fase 3 do Tech Challenge. Implementação de pipelines CI/CD com DevSecOps e Git
 ## Arquitetura
 
 ```
-  GitHub Push
-      │
-      ▼
+                  GitHub Push
+                      │
+                      ▼
 ┌─────────────────────────────────────────────┐
 │           GitHub Actions (CI)               │
 │  build-test ──┬── lint          (paralelo)  │
@@ -22,15 +22,17 @@ Fase 3 do Tech Challenge. Implementação de pipelines CI/CD com DevSecOps e Git
 │                        │                    │
 │          sed deployment.yaml + git push      │
 └─────────────────────────────────────────────┘
-      │
-      ▼  (GitOps)
+                      │
+                      |
+                      ▼  
+                  (GitOps)
 ┌─────────────────────────────────────────────┐
 │              ArgoCD (EKS)                   │
 │   detecta mudança no deployment.yaml        │
 │   sincroniza automaticamente no cluster     │
 └─────────────────────────────────────────────┘
-      │
-      ▼
+                      │
+                      ▼
 ┌─────────────────────────────────────────────┐
 │         Kubernetes — namespace togglemaster  │
 │  auth  flag  targeting  analytics  evaluation│
