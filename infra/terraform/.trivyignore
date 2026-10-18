@@ -1,0 +1,13 @@
+# Findings em módulos externos (terraform-aws-modules) — não editáveis diretamente
+#
+# AWS-0040: EKS endpoint público — aceito para acesso via kubectl fora da VPC.
+#           Mitigado via cluster_endpoint_public_access_cidrs em eks.tf.
+AWS-0040
+
+# AWS-0041: CIDRs do endpoint público — variável passada pelo módulo.
+#           Valor configurável via var.eks_public_access_cidrs.
+AWS-0041
+
+# AWS-0104: Egress rule nos node groups — gerado pelo módulo EKS interno.
+#           Os nós precisam de saída para ECR, S3 e APIs da AWS.
+AWS-0104

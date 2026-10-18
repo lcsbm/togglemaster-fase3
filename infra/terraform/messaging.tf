@@ -2,6 +2,7 @@ resource "aws_sqs_queue" "events" {
   name                       = "togglemaster-events"
   message_retention_seconds  = 86400 # 1 dia
   visibility_timeout_seconds = 30
+  kms_master_key_id          = "alias/aws/sqs"
 
   tags = local.common_tags
 }

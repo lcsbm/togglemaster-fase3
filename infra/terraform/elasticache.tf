@@ -10,11 +10,12 @@ resource "aws_security_group" "redis" {
     security_groups = [module.eks.node_security_group_id]
   }
 
+  # Redis não inicia conexões de saída — egress restrito à VPC
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [module.vpc.vpc_cidr_block]
   }
 
   tags = local.common_tags
