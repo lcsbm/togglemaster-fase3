@@ -46,8 +46,24 @@ jobs:
         working-directory: ${{ env.TF_DIR }}
         run: terraform init
 
+      - name: Configure kubectl
+        run: aws eks update-kubeconfig --name togglemaster --region ${{ env.AWS_REGION }}
+        continue-on-error: true
+
+      - name: Pre-remove Helm releases
+        run: |
+          for release in keda external-secrets argocd ingress-nginx metrics-server; do
+            ns=$release
+            [ "$release" = "metrics-server" ] && ns=kube-system
+            helm uninstall "$release" -n "$ns" --wait=false 2>/dev/null || true
+          done
+          kubectl delete namespace keda external-secrets argocd ingress-nginx \
+            --ignore-not-found --wait=false 2>/dev/null || true
+        continue-on-error: true
+
       - name: Terraform Destroy
         working-directory: ${{ env.TF_DIR }}
+        timeout-minutes: 60
         run: terraform destroy -auto-approve
         env:
           TF_VAR_project: togglemaster
