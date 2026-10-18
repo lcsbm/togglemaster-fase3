@@ -13,6 +13,8 @@ spec:
       labels:
         app: flag-service
     spec:
+      securityContext:
+        runAsNonRoot: true
       containers:
         - name: flag-service
           image: 603727984890.dkr.ecr.us-east-1.amazonaws.com/togglemaster/flag-service:sha-419e9f9

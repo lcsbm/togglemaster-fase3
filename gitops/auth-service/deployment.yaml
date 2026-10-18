@@ -13,6 +13,8 @@ spec:
       labels:
         app: auth-service
     spec:
+      securityContext:
+        runAsNonRoot: true
       containers:
         - name: auth-service
           image: 603727984890.dkr.ecr.us-east-1.amazonaws.com/togglemaster/auth-service:sha-7d7662a

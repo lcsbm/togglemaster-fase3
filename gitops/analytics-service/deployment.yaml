@@ -13,6 +13,8 @@ spec:
       labels:
         app: analytics-service
     spec:
+      securityContext:
+        runAsNonRoot: true
       containers:
         - name: analytics-service
           image: 603727984890.dkr.ecr.us-east-1.amazonaws.com/togglemaster/analytics-service:sha-419e9f9
