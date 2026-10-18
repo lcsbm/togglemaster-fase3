@@ -13,6 +13,8 @@ spec:
       labels:
         app: evaluation-service
     spec:
+      securityContext:
+        runAsNonRoot: true
       containers:
         - name: evaluation-service
           image: 603727984890.dkr.ecr.us-east-1.amazonaws.com/togglemaster/evaluation-service:sha-0970ad2
