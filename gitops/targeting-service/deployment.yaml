@@ -18,6 +18,8 @@ spec:
       containers:
         - name: targeting-service
           image: 603727984890.dkr.ecr.us-east-1.amazonaws.com/togglemaster/targeting-service:sha-a22c9f3
+          securityContext:
+            runAsUser: 100
           ports:
             - containerPort: 8003
           envFrom:
