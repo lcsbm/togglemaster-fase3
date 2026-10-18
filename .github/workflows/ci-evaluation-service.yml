@@ -53,16 +53,12 @@ jobs:
         with:
           go-version: 'stable'
 
-      - name: Tidy modules
-        working-directory: services/evaluation-service
-        run: go mod tidy
-
-      - name: Install golangci-lint
-        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-
       - name: golangci-lint
-        working-directory: services/evaluation-service
-        run: golangci-lint run ./... --timeout=5m
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: services/evaluation-service
+          args: --timeout=5m
 
   # ── 3. Security Scan (SAST + SCA) ────────────────────────────────────────
   security:
