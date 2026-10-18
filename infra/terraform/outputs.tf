@@ -37,7 +37,7 @@ output "rds_targeting_host" {
 # ── ElastiCache ───────────────────────────────────
 output "redis_host" {
   description = "Host do ElastiCache Redis (evaluation-service)"
-  value       = aws_elasticache_cluster.redis.cache_nodes[0].address
+  value       = aws_elasticache_replication_group.redis.primary_endpoint_address
 }
 
 # ── Mensageria ───────────────────────────────────
