@@ -5,6 +5,8 @@ infra/terraform/*.tfstate.backup
 infra/terraform/*.tfstate.lock.info
 infra/terraform/.terraform.lock.hcl
 infra/terraform/terraform.tfvars
+infra/terraform/tfplan
+infra/terraform/*.tfplan
 
 # Segredos — NUNCA commitar
 .env
