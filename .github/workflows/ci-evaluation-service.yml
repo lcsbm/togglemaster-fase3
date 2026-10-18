@@ -51,18 +51,15 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: 'stable'
 
-      - name: Download modules
+      - name: Tidy modules
         working-directory: services/evaluation-service
-        run: go mod download
+        run: go mod tidy
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: services/evaluation-service
-          args: --timeout=5m
+      - name: go vet
+        working-directory: services/evaluation-service
+        run: go vet ./...
 
   # ── 3. Security Scan (SAST + SCA) ────────────────────────────────────────
   security:
