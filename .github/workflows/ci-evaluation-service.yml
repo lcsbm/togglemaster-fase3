@@ -53,6 +53,10 @@ jobs:
         with:
           go-version: '1.24'
 
+      - name: Download modules
+        working-directory: services/evaluation-service
+        run: go mod download
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
