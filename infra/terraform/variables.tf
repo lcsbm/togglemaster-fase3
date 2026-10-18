@@ -31,6 +31,12 @@ variable "eks_max_nodes" {
   default = 3
 }
 
+variable "eks_public_access_cidrs" {
+  description = "CIDRs autorizados a acessar o endpoint público do EKS (kubectl)"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
 variable "github_repo" {
   description = "Repositório GitHub no formato org/repo (usado pelo ArgoCD)"
   type        = string
