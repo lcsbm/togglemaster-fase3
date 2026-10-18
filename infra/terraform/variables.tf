@@ -37,6 +37,12 @@ variable "eks_public_access_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "eks_admin_iam_arn" {
+  description = "ARN do IAM user/role que terá acesso admin ao cluster EKS via kubectl"
+  type        = string
+  default     = "arn:aws:iam::603727984890:user/santz"
+}
+
 variable "github_repo" {
   description = "Repositório GitHub no formato org/repo (usado pelo ArgoCD)"
   type        = string
