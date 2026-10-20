@@ -1,7 +1,7 @@
 # ToggleMaster - Fase 3: CI/CD + GitOps
 
 **FIAP POSTECH - DevOps e Arquitetura Cloud**
-**RM 373161 - Lucas Sousa Beraldi Moreira**
+**RM 373161 - Lucas Santana Bezerra de Melo**
 
 Fase 3 do Tech Challenge. Implementação de pipelines CI/CD com DevSecOps e GitOps com ArgoCD para os cinco microsserviços da plataforma de feature flags ToggleMaster.
 
